@@ -1,0 +1,447 @@
+{
+	"info": {
+		"_postman_id": "382f0240-1811-4d7d-8ab8-11c6cedf94df",
+		"name": "Tender Management System API",
+		"description": "API for managing tenders, bids, vendors, and statuses",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13745811"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin@123\",\n  \"role\": \"Admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    if (jsonData.Data && jsonData.Data.token && jsonData.Data.token.token) {",
+									"        pm.environment.set(\"TOKEN\", jsonData.Data.token.token);",
+									"    } else {",
+									"        console.error(\"Token not found in the expected response structure\");",
+									"    }",
+									"} "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin1\",\n  \"password\": \"Admin@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tenders",
+			"item": [
+				{
+					"name": "Get All Tenders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/tenders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tenders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Tender",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"New Construction Project\",\n  \"description\": \"Building a new office complex\",\n  \"deadline\": \"2023-12-31T00:00:00\",\n  \"categoryId\": \"1c2b5d67-f332-4b4b-a806-8b6e329fced7\",\n  \"statusId\": \"12bd2cd6-63e8-43b6-ab7a-fb59cd800b14\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tenders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tenders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tender by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/tenders/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tenders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{TOKEN}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Bids",
+			"item": [
+				{
+					"name": "Submit Bid",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tenderId\": 1,\n  \"vendorId\": 1,\n  \"amount\": 150000.00,\n  \"comments\": \"Our competitive bid offer\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bids",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bids"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Bid Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"statusId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bids/:id/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bids",
+								":id",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lookups",
+			"item": [
+				{
+					"name": "Get Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Statuses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/statuses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"statuses"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vendor",
+			"item": [
+				{
+					"name": "Create Vendor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/vendors",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"vendors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Vendors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/vendors",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"vendors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vendor By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/vendors/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"vendors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"console.log('Requesting: ' + pm.request.url);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 200 or 201\", function() {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5050"
+		},
+		{
+			"key": "TOKEN",
+			"value": ""
+		}
+	]
+}
